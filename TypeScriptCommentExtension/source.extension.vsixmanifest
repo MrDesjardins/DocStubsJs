@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+  <Metadata>
+    <Identity Id="TypeScriptCommentExtension..954b6985-5b74-4ae8-9614-425728636053" Version="1.0.0" Language="en-US" Publisher="Patrick Desjardins" />
+    <DisplayName>TypeScriptCommentExtension</DisplayName>
+    <Description xml:space="preserve">This is a simple extension that auto-generates documentation comment stubs for TypeScript. This code is strongly from Michael Obermeyer, Jr. extension for Visual Studio 2012 which was doing other things. This version is trimmed to have only JsDoc support for TypeScript only.</Description>
+    <License>GNU.txt</License>
+    <PreviewImage>vsdocExtensionScreen2.PNG</PreviewImage>
+    <Tags>Documentation, Javascript, jsdoc comments, Intellisense, jscript</Tags>
+  </Metadata>
+  <Installation>
+    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[14.0,14.0]" />
+  </Installation>
+  <Dependencies>
+    <Dependency d:Source="Project" d:ProjectName="TypeScriptCommentOptions" DisplayName="|TypeScriptCommentOptions;VSIXNameProjectOutputGroup|" Id="|TypeScriptCommentOptions;VSIXIdentifierProjectOutputGroup|" d:InstallSource="Embed" Location="|TypeScriptCommentOptions;VSIXContainerProjectOutputGroup|" d:VsixSubPath="TypeScriptCommentOptions" />
+  </Dependencies>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="TypeScriptCommentOptions" Path="|TypeScriptCommentOptions;PkgdefProjectOutputGroup|" />
+  </Assets>
+</PackageManifest>
