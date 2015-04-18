@@ -7,6 +7,7 @@ namespace TypeScriptCommentExtension
     #region Adornment Factory
     /// <summary>
     /// The extension will be listening specific file type. We specify that we want only TypeScript file.
+    /// This class also setup the extension to be executed at a particular time which is after any selection and before text.
     /// </summary>
     [Export(typeof(IWpfTextViewCreationListener))]
     [ContentType("TypeScript")]
@@ -23,7 +24,7 @@ namespace TypeScriptCommentExtension
         public AdornmentLayerDefinition editorAdornmentLayer = null;
                 
         /// <summary>
-        /// Instantiates a JScript_vsdoc_Stub_Generator_11 manager when a textView is created.
+        /// Instantiates a extension manager when a textView is created.
         /// </summary>
         /// <param name="textView">The <see cref="IWpfTextView"/> upon which the adornment should be placed</param>
         public void TextViewCreated(IWpfTextView textView)

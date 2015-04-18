@@ -9,17 +9,12 @@ namespace TypeScriptCommentExtension
 {
     class StubUtils
     {
-        public static readonly Regex ReturnRegex = new Regex("return ");
+        public static readonly Regex ReturnRegex = new Regex(@"(\)\s?:)(.*?){");
         public static readonly Regex JavaScriptFnRegex = new Regex(@"function(\(|\s)");
 
         // Currently, this regex could give some false-positives. Ex: { someProp: (a * b) };
         public static readonly Regex TypeScriptFnRegex = new Regex(@":\s?\([a-z_$]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         public static readonly ReturnOptions Options = new ReturnOptions();
-
-        public static string GetLineTextFromPosition(int position, ITextSnapshot snapshot)
-        {
-            return snapshot.GetLineFromPosition(position - 1).GetText();
-        }
 
         /// <summary>
         /// Gets the number of tabs from the beginning of the line.
@@ -151,18 +146,8 @@ namespace TypeScriptCommentExtension
                 .ToArray();
         }
 
-        public static bool ShouldCreateReturnTag(int position, ITextSnapshot capture)
+        public static string ShouldCreateReturnTag(int position, ITextSnapshot capture)
         {
-
-            if (Options.ReturnGenerationOption == ReturnTagGenerationSetting.Always)
-            {
-                return true;
-            }
-            if (Options.ReturnGenerationOption == ReturnTagGenerationSetting.Never)
-            {
-                return false;
-            }
-
             bool hasReturn = false;
             bool newFunction = false;
             bool functionClosed = false;
@@ -174,11 +159,11 @@ namespace TypeScriptCommentExtension
    
 
             bool inFunction = GetFunctionDeclarationLineNumber(capture, lineNumber) >= 0;
-            if (!inFunction) return false;
+            if (!inFunction) return "";
 
             lineNumber = GetNextOpenCurlyBrace(lineNumber, capture);
 
-            if (lineNumber == -1) { return false; }
+            if (lineNumber == -1) { return ""; }
 
             int functionsOpen = 1;
             int openBracket = 1;
@@ -259,17 +244,14 @@ namespace TypeScriptCommentExtension
                 }
                 if (functionsOpen == 0) functionClosed = true;
 
-                if (functionsOpen == 1 && ReturnRegex.IsMatch(lineText) && !isInlineFunction)
+                if (ReturnRegex.IsMatch(lineText))
                 {
-                    hasReturn = true;
-                    break;
+                    var matches = ReturnRegex.Match(lineText);
+                    return matches.Groups[2].ToString();
                 }
-                else if (functionClosed)
-                {
-                    break;
-                }
+                return "";
             }
-            return hasReturn;
+            return "";
         }
 
         // Searches down the file for the next line with an open curly brace, including the given line number.

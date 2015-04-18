@@ -63,20 +63,6 @@ namespace TypeScriptCommentOptions
             set { multiLineReturn = value; }
         }
 
-        private ReturnTagGenerationSetting returnGenerationOption = ReturnTagGenerationSetting.Auto;
-        /// <summary>
-        /// Gets or sets the value indicating when return tags should be generated.
-        /// </summary>
-        public ReturnTagGenerationSetting ReturnGenerationOption
-        {
-            get
-            {
-                LoadSettingsFromStorage();
-                return returnGenerationOption;
-            }
-            set { returnGenerationOption = value; }
-        }
-
         private static string paramAttrs = "";
         /// <summary>
         /// The default param tag attributes to use for vsdoc comments.
@@ -176,7 +162,6 @@ namespace TypeScriptCommentOptions
                 MultiLineReturn = UpdateSetting("MultiLineReturn", false);
                 MultiLineSummary = UpdateSetting("MultiLineSummary", true);
                 AutoNewLine = UpdateSetting("AutoNewLine", true);
-                ReturnGenerationOption = UpdateEnumSetting("ReturnGenerationSetting", ReturnTagGenerationSetting.Auto);
                 UseSpacesForTabs = GetSetting("Text Editor\\JavaScript", "Insert Tabs", 0) == 0;
                 SpacesForTabsCount = GetSetting("Text Editor\\JavaScript", "Tab Size", 4);
 

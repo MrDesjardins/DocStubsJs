@@ -19,9 +19,8 @@ namespace TypeScriptCommentExtension
             this.editor.Changed += OnTextChanged;
         }
 
-        //Microsoft.VisualStudio.Text.Impl
         /// <summary>
-        /// On text change, check for the /// comment.
+        /// On text change, check for the /**
         /// </summary>
         private void OnTextChanged(object sender, TextContentChangedEventArgs e)
         {
@@ -36,13 +35,9 @@ namespace TypeScriptCommentExtension
 
                 foreach (ITextChange change in changes)
                 {
-                    if (change.NewText.EndsWith("*") && LineIsJSDocOpening(change.OldEnd))
+                    if (CurrentTypedCharacterIs(change, "*") && PeviewTextTypedIs(change, "/*"))
                     {
-                        CreateStub(change.NewEnd, change);
-                    }
-                    else if (StubUtils.Options.AutoNewLine && change.NewText.EndsWith(Environment.NewLine))
-                    {
-                        CreateNewCommentLine(change);
+                        CreateMethodComment(change.NewEnd, change);
                     }
                 }
             }
@@ -52,44 +47,16 @@ namespace TypeScriptCommentExtension
             }
         }
 
-        /// <summary>
-        /// Returns true if the line at the given position ends with the /* characters prior to any pending changes.
-        /// </summary>
-        /// <param name="i"></param>
-        /// <returns></returns>
-        private bool LineIsJSDocOpening(int i)
+        private static bool CurrentTypedCharacterIs(ITextChange change, string character)
         {
-            return StubUtils.GetLineTextFromPosition(i, this.view.TextSnapshot).EndsWith("/*");
+            return change.NewText.EndsWith(character);
         }
 
-        private static readonly Regex commentLineStart = new Regex(@"^\s*(\*)|(/\*\*)", RegexOptions.Compiled);
-        private void CreateNewCommentLine(ITextChange change)
+        private bool PeviewTextTypedIs(ITextChange change, string character)
         {
-            using (ITextEdit editor = this.view.TextBuffer.CreateEdit())
-            {
-                try
-                {
-                    ITextSnapshotLine line = this.view.TextSnapshot.GetLineFromPosition(change.OldEnd);
-                    string lineText = line.GetText();
-                    string nextLine = this.view.TextSnapshot.GetLineFromLineNumber(line.LineNumber + 1).GetText();
-                    if (commentLineStart.IsMatch(lineText) && (commentLineStart.IsMatch(nextLine) || change.OldEnd != line.End.Position))
-                    {
-                        int asteriskIndex = lineText.IndexOf('*');
-                        //Only add a new comment line if the newline char is after the triple slash
-                        //(how Visual Studio in C# works)
-                        if ((line.Start.Position + asteriskIndex) > change.OldEnd)
-                            return;
-
-                        int openingSlashIndex = lineText.IndexOf('/');
-                        int tabsStopIndex = asteriskIndex > openingSlashIndex ? openingSlashIndex : asteriskIndex;
-
-                        string newTabs = tabsStopIndex >= 0 ? lineText.Substring(0, tabsStopIndex) : "";
-                        editor.Replace(change.NewSpan, Environment.NewLine + newTabs + "* ");
-                        editor.Apply();
-                    }
-                }
-                catch (Exception) { }
-            }
+            int i = change.OldEnd;
+            string lineText = this.view.TextSnapshot.GetLineFromPosition(i - 1).GetText();
+            return lineText.EndsWith(character);
         }
 
         /// <summary>
@@ -102,7 +69,7 @@ namespace TypeScriptCommentExtension
             return result;
         }
 
-        private void CreateStub(int position, ITextChange change)
+        private void CreateMethodComment(int position, ITextChange change)
         {
             string text = this.view.TextSnapshot.ToString();
             using (ITextEdit editor = this.view.TextBuffer.CreateEdit())
@@ -167,11 +134,9 @@ namespace TypeScriptCommentExtension
         /// <returns>Return tag line as a string.</returns>
         private string GetReturnTag(int position)
         {
-            string result = "";
-            bool shouldCreate = StubUtils.ShouldCreateReturnTag(position, this.view.TextSnapshot);
+            string shouldCreate = StubUtils.ShouldCreateReturnTag(position, this.view.TextSnapshot);
 
-            if (shouldCreate)
-                result = NewLine() + "@returns";
+            string result = NewLine() + "@returns {" + shouldCreate + "}";
 
             return result;
         }
