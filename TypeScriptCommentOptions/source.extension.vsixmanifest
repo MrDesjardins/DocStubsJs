@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="TypeScriptCommentOptions..5faf6911-0879-4057-adc1-b8c9575af159" Version="1.0" Language="en-US" Publisher="Patrick Desjardins" />
+    <Identity Id="e6638b63-94a4-4366-b2cd-7118a5d4ac4c" Version="1.0" Language="en-US" Publisher="Patrick Desjardins" />
     <DisplayName>TypeScriptCommentOptions</DisplayName>
     <Description xml:space="preserve">TypeScript Comments Generator Options</Description>
   </Metadata>

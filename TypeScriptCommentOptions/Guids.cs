@@ -6,8 +6,8 @@ namespace JScriptStubOptions
 {
     public static class GuidList
     {
-        public const string guidJScriptStubOptionsPkgString = "5faf6911-0879-4057-adc1-b8c9575af159";
-        public const string guidJScriptStubOptionsCmdSetString = "430ba856-664d-4a07-877c-1192f244ab4b";
+        public const string guidJScriptStubOptionsPkgString = "e1cac3c4-663e-4f7b-9f92-7d3a39fc34f0";
+        public const string guidJScriptStubOptionsCmdSetString = "e6638b63-94a4-4366-b2cd-7118a5d4ac4c";
 
         public static readonly Guid guidJScriptStubOptionsCmdSet = new Guid(guidJScriptStubOptionsCmdSetString);
     };

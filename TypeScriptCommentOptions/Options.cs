@@ -76,96 +76,7 @@ namespace JScriptStubOptions
             }
         }
 
-        private bool vsdocEnabled = true;
-        [Category("VSDoc Options")]
-        [DisplayName("Enabled")]
-        public bool VSDocEnabled
-        {
-            get
-            {
-                return vsdocEnabled;
-            }
-            set
-            {
-                vsdocEnabled = value;
-            }
-        }
-
-        private string returnTagAttributes = "type=\"\"";
-        /// <summary>
-		/// Gets or sets whether or not the type attribute should be included in returns tags.
-		/// </summary>
-		[Category("VSDoc Options")]
-        [DisplayName("Include Return Type Attribute")]
-		[Description("Default attributes to include with the <return> tag separated by spaces.")]
-		public string ReturnTagAttributes
-		{
-			get 
-			{
-                return returnTagAttributes;
-			}
-			set
-			{
-                returnTagAttributes = value;
-			}
-		}
-
-        private bool multiLineReturn = false;
-        /// <summary>
-        /// Gets or sets whether or not the return tags should be generated on multiple lines.
-        /// </summary>
-        [Category("VSDoc Options")]
-        [DisplayName("Multi-line Return Tags")]
-        [Description("Whether or not <return> tags should be generated with a blank line between the opening and closing tags.")]
-        public bool MultiLineReturn
-        {
-            get
-            {
-                return multiLineReturn;
-            }
-            set
-            {
-                multiLineReturn = value;
-            }
-        }
-
-        private string paramTagAttributes = "";
-        /// <summary>
-        /// Gets or sets the ReturnOptions.
-        /// </summary>
-        [Category("VSDoc Options")]
-        [DisplayName("Include Parameter Type Attribute")]
-        [Description("Default attributes to include with the <param> tag separated by spaces.")]
-        public string ParamTagAttributes
-        {
-            get
-            {
-                return paramTagAttributes;
-            }
-            set
-            {
-                paramTagAttributes = value;
-            }
-        }
-
-        private bool multiLineParam = false;
-        /// <summary>
-        /// Gets or sets whether or not the param tags should be generated on multiple lines.
-        /// </summary>
-        [Category("VSDoc Options")]
-        [DisplayName("Multi-line Param Tags")]
-        [Description("Whether or not <param> tags should be generated with a blank line between the opening and closing tags.")]
-        public bool MultiLineParam
-        {
-            get
-            {
-                return multiLineParam;
-            }
-            set
-            {
-                multiLineParam = value;
-            }
-        }
+      
 
         private bool jsdocEnabled = true;
         [Category("JSDoc Options")]
@@ -209,10 +120,6 @@ namespace JScriptStubOptions
         public override void ResetSettings()
         {
             base.ResetSettings();
-            this.ReturnTagAttributes = "type=\"\"";
-            this.ParamTagAttributes = "type=\"\"";
-            this.MultiLineParam = false;
-            this.multiLineReturn = false;
             this.MultiLineSummary = false;
             this.UseAsterisk = true;
             this.JSDocEnabled = true;

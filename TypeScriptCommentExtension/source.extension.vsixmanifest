@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="TypeScriptCommentExtension..954b6985-5b74-4ae8-9614-425728636053" Version="1.0.0" Language="en-US" Publisher="Patrick Desjardins" />
+    <Identity Id="e1cac3c4-663e-4f7b-9f92-7d3a39fc34f0" Version="1.0.0" Language="en-US" Publisher="Patrick Desjardins" />
     <DisplayName>TypeScriptCommentExtension</DisplayName>
     <Description xml:space="preserve">This is a simple extension that auto-generates documentation comment stubs for TypeScript. This code is strongly from Michael Obermeyer, Jr. extension for Visual Studio 2012 which was doing other things. This version is trimmed to have only JsDoc support for TypeScript only.</Description>
     <License>GNU.txt</License>

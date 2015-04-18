@@ -37,7 +37,7 @@ namespace TypeScriptCommentExtension
                 {
                     if (CurrentTypedCharacterIs(change, "*") && PeviewTextTypedIs(change, "/*"))
                     {
-                        CreateMethodComment(change.NewEnd, change);
+                        CreateMethodComment(change);
                     }
                 }
             }
@@ -69,8 +69,9 @@ namespace TypeScriptCommentExtension
             return result;
         }
 
-        private void CreateMethodComment(int position, ITextChange change)
+        private void CreateMethodComment(ITextChange change)
         {
+            int position = change.NewEnd;
             string text = this.view.TextSnapshot.ToString();
             using (ITextEdit editor = this.view.TextBuffer.CreateEdit())
             {
@@ -92,6 +93,7 @@ namespace TypeScriptCommentExtension
                     int lineStart = this.view.TextSnapshot.GetLineFromPosition(position).Start.Position;
                     Span firstLineSpan = new Span(lineStart, change.NewSpan.End - lineStart);
                     editor.Replace(firstLineSpan, autoComment);
+                    var after = editor.Apply();
                 }
                 catch (Exception ex)
                 {
@@ -136,7 +138,7 @@ namespace TypeScriptCommentExtension
         {
             string shouldCreate = StubUtils.ShouldCreateReturnTag(position, this.view.TextSnapshot);
 
-            string result = NewLine() + "@returns {" + shouldCreate + "}";
+            string result = NewLine() + "@returns {" + shouldCreate.Trim() + "}";
 
             return result;
         }
