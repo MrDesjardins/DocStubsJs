@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Formatting;
 
 namespace TypeScriptCommentExtension
 {
@@ -90,10 +91,33 @@ namespace TypeScriptCommentExtension
 
                     autoComment += " */";
 
+
                     int lineStart = this.view.TextSnapshot.GetLineFromPosition(position).Start.Position;
                     Span firstLineSpan = new Span(lineStart, change.NewSpan.End - lineStart);
                     editor.Replace(firstLineSpan, autoComment);
-                    var after = editor.Apply();
+
+                    ITextSnapshot after = editor.Apply();
+
+
+                    //Move the caret back at the comment description
+                    //int lineNumber = this.view.TextSnapshot.GetLineNumberFromPosition(change.OldEnd - 1);
+                    //var lineSnapShotPoint = this.view.TextSnapshot.GetLineFromLineNumber(lineNumber).Start;
+                    //ITextViewLine descriptionPosition = this.view.GetTextViewLineContainingBufferPosition(lineSnapShotPoint);
+                    //this.view.Caret.MoveTo(descriptionPosition);
+                    
+                    view.Caret.MoveTo(
+                        view.GetTextViewLineContainingBufferPosition(
+                            after.GetLineFromPosition(
+                                after.GetText().IndexOf(autoComment)).Start));
+
+
+                    //view.Caret.MoveTo(
+                    //    view.GetTextViewLineContainingBufferPosition(
+                    //        view.TextSnapshot.GetLineFromPosition(
+                    //            view.TextSnapshot.GetText().IndexOf(fn)).Start));
+
+    
+                    
                 }
                 catch (Exception ex)
                 {
