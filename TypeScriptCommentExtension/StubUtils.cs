@@ -26,7 +26,6 @@ namespace TypeScriptCommentExtension
         {
             int lineNum = capture.GetLineNumberFromPosition(lastSlashPosition);
             lineNum++; 
-            lineNum = GetFunctionDeclarationLineNumber(capture, lineNum);
             string space = capture.GetLineFromLineNumber(lineNum).GetText();
             int leadingSpace = space.Length - space.TrimStart().Length;
             space = space.Substring(0, leadingSpace);
@@ -40,25 +39,6 @@ namespace TypeScriptCommentExtension
             return JavaScriptFnRegex.IsMatch(lineText) || (isTypeScript && TypeScriptFnRegex.IsMatch(lineText));
         }
 
-        /// <summary>
-        /// Returns the line on which the word "function" or other function initializers appear.
-        /// </summary>
-        /// <param name="capture">The text snapshot.</param>
-        /// <param name="lineNumber">The line that should contain the open curlybrace for the function if one exists
-        /// in the context of the comment, or the first line of the function itself.</param>
-        /// <returns>Returns the line of the function declaration. -1 if one is not found that corresponds to the given
-        /// line number.</returns>
-        public static int GetFunctionDeclarationLineNumber(ITextSnapshot capture, int lineNumber)
-        {
-            string lineText = capture.GetLineFromLineNumber(lineNumber).GetText();
-            var isTypeScript = capture.ContentType.TypeName == "TypeScript";
-            if (!IsFunctionLine(lineText, isTypeScript)) 
-            { 
-                return -1; 
-            }
-
-            return lineNumber;
-        }
 
         /// <summary>
         /// Returns the given string with text that falls in a comment block removed.
@@ -94,7 +74,6 @@ namespace TypeScriptCommentExtension
             openFunctionLine += 1;
             ITextSnapshotLine line = capture.GetLineFromLineNumber(openFunctionLine);
             string prevLine = line.Extent.GetText();
-            openFunctionLine = StubUtils.GetFunctionDeclarationLineNumber(capture, openFunctionLine);
             //Not immediately after a function declaration
             if (openFunctionLine == -1) return new string[0];
 
@@ -157,10 +136,6 @@ namespace TypeScriptCommentExtension
 
             lineNumber++;
    
-
-            bool inFunction = GetFunctionDeclarationLineNumber(capture, lineNumber) >= 0;
-            if (!inFunction) return "";
-
             lineNumber = GetNextOpenCurlyBrace(lineNumber, capture);
 
             if (lineNumber == -1) { return ""; }
