@@ -40,6 +40,13 @@ namespace TypeScriptCommentExtension
                     {
                         CreateMethodComment(change);
                     }
+                    if (change.OldText.Trim() == "/**")
+                    {
+                        //Move the caret back at the comment description
+                        int lineNumber = this.view.TextSnapshot.GetLineNumberFromPosition(change.NewPosition)+2; //2 because we want to be inside the comment
+                        var lineSnapShotPoint = this.view.TextSnapshot.GetLineFromPosition(change.NewPosition-1).Start;
+                        this.view.Caret.MoveTo(lineSnapShotPoint);
+                    }
                 }
             }
             catch (Exception ex)
@@ -80,8 +87,12 @@ namespace TypeScriptCommentExtension
                 {
                     this.tabs = StubUtils.GetIndention(position, this.view.TextSnapshot);
                     string summaryString = StubUtils.Options.MultiLineSummary ? NewLine() : "";
+
+
                     string parameters = GetFunctionParameters(position);
                     string returnTag = GetReturnTag(position);
+
+
                     string commentBody = summaryString + parameters + returnTag;
                     string autoComment = this.tabs + "/**" + commentBody;
                     if (!String.IsNullOrEmpty(commentBody))
@@ -98,17 +109,16 @@ namespace TypeScriptCommentExtension
 
                     ITextSnapshot after = editor.Apply();
 
+                    ////Move the caret back at the comment description
 
-                    //Move the caret back at the comment description
-                    //int lineNumber = this.view.TextSnapshot.GetLineNumberFromPosition(change.OldEnd - 1);
-                    //var lineSnapShotPoint = this.view.TextSnapshot.GetLineFromLineNumber(lineNumber).Start;
-                    //ITextViewLine descriptionPosition = this.view.GetTextViewLineContainingBufferPosition(lineSnapShotPoint);
-                    //this.view.Caret.MoveTo(descriptionPosition);
-                    
-                    view.Caret.MoveTo(
-                        view.GetTextViewLineContainingBufferPosition(
-                            after.GetLineFromPosition(
-                                after.GetText().IndexOf(autoComment)).Start));
+                    //int lineNumber = after.GetLineNumberFromPosition(change.NewPosition);
+                    //var lineSnapShotPoint = after.GetLineFromLineNumber(lineNumber).End;
+                    //this.view.Caret.MoveTo(lineSnapShotPoint);
+
+                    //view.Caret.MoveTo(
+                    //    view.GetTextViewLineContainingBufferPosition(
+                    //        after.GetLineFromPosition(
+                    //            after.GetText().IndexOf(autoComment)).Start));
 
 
                     //view.Caret.MoveTo(
@@ -116,8 +126,8 @@ namespace TypeScriptCommentExtension
                     //        view.TextSnapshot.GetLineFromPosition(
                     //            view.TextSnapshot.GetText().IndexOf(fn)).Start));
 
-    
-                    
+
+
                 }
                 catch (Exception ex)
                 {

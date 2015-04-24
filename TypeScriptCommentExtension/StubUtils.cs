@@ -33,13 +33,6 @@ namespace TypeScriptCommentExtension
             return space; 
         }
 
-
-        private static bool IsFunctionLine(string lineText, bool isTypeScript)
-        {
-            return JavaScriptFnRegex.IsMatch(lineText) || (isTypeScript && TypeScriptFnRegex.IsMatch(lineText));
-        }
-
-
         /// <summary>
         /// Returns the given string with text that falls in a comment block removed.
         /// </summary>
@@ -69,35 +62,13 @@ namespace TypeScriptCommentExtension
 
         public static string[] GetFunctionParameters(int position, ITextSnapshot capture)
         {
+            int openFunctionLine = capture.GetLineNumberFromPosition(position - 1) + 1;
+            var prevLine = capture.GetLineFromLineNumber(openFunctionLine).GetText();
 
-            int openFunctionLine = capture.GetLineNumberFromPosition(position - 1);
-            openFunctionLine += 1;
-            ITextSnapshotLine line = capture.GetLineFromLineNumber(openFunctionLine);
-            string prevLine = line.Extent.GetText();
-            //Not immediately after a function declaration
-            if (openFunctionLine == -1) return new string[0];
-
-            prevLine = capture.GetLineFromLineNumber(openFunctionLine).GetText();
-
-            int ftnIndex = StubUtils.JavaScriptFnRegex.Match(prevLine).Index;
-            int firstParenPosition = -1;
-            if (prevLine.IndexOf('(', ftnIndex) > -1)
-            {
-                firstParenPosition = capture.GetLineFromLineNumber(openFunctionLine).Start +
-                                 prevLine.IndexOf('(', ftnIndex) + 1;
-            }
-            else
-            {
-                do
-                {
-                    openFunctionLine++;
-                    prevLine = capture.GetLineFromLineNumber(openFunctionLine).GetText();
-                } while (!prevLine.Contains("("));
-
-                firstParenPosition = capture.GetLineFromLineNumber(openFunctionLine).Start
-                                     + prevLine.IndexOf('(')
-                                     + 1;
-            }
+            int firstParenPosition = capture.GetLineFromLineNumber(openFunctionLine).Start
+                                    + prevLine.IndexOf('(')
+                                    + 1;
+            
 
             int lastParenPosition = -1;
             if (prevLine.IndexOf(')') > 0)
